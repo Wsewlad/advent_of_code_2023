@@ -6,11 +6,11 @@ def calculate_sum_of_game_ids(input_text: str) -> int:
     for line in lines:
         game, sets = line.split(":")
         game_id = game.strip().split(" ")[-1]
-        sets = sets.replace(";", ",").split(",")
-        cubes = {"red": 12, "green": 13, "blue": 14}
-        for cube in cubes:
-            cubes[cube] -= sum([int(set.split()[0]) for set in sets if cube in set])
-            if cubes[cube] < 0:
+        cubes = sets.replace(";", ",").split(",")
+        cube_rules = {"red": 12, "green": 13, "blue": 14}
+        for rule in cube_rules:
+            cube_numbres = sorted([int(cube.split()[0]) for cube in cubes if rule in cube])
+            if cube_numbres[-1] > cube_rules[rule]:
                 break
         else:
             result += int(game_id)
