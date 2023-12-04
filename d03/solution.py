@@ -4,6 +4,14 @@ import math
 
 
 def is_number_valid(span: tuple, lines: list) -> bool:
+    """
+    Checks if number is valid. Number is valid if it is surrounded by any symbol other than dot or digit.
+    ARGS:
+        span: tuple with start and end location of number in line
+        lines: list of lines to check
+    RETURN:
+        True if number is valid, False otherwise
+    """
     start = 0 if span[0] - 1 < 0 else span[0] - 1
     end = len(lines[1]) if span[1] + 1 > len(lines[1]) else span[1] + 1
     for line in lines:
@@ -13,6 +21,13 @@ def is_number_valid(span: tuple, lines: list) -> bool:
 
 
 def get_sum_of_all_part_numbers(input_text: str) -> int:
+    """
+    Splits input text into lines and checks if number is valid. If number is valid, it is added to result.
+    ARGS:
+        input_text: input text
+    RETURN:
+        sum of all valid numbers (int)
+    """
     result = 0
     lines = input_text.splitlines()
     for idx, line in enumerate(lines):
@@ -30,6 +45,15 @@ def get_sum_of_all_part_numbers(input_text: str) -> int:
 
 
 def find_gear_ratios(span: tuple, lines: list) -> int:
+    """
+    Finds gear ratios in lines.
+    Gear ratio is a product of all numbers that are touched by the same star *.
+    ARGS:
+        span: tuple with start and end location of star in line
+        lines: list of lines to check
+    RETURN:
+        gear ratio (int)
+    """
     start = 0 if span[0] - 1 < 0 else span[0] - 1
     end = len(lines[1]) if span[1] + 1 > len(lines[1]) else span[1] + 1
     star_interval = pd.Interval(start, end)
@@ -45,6 +69,13 @@ def find_gear_ratios(span: tuple, lines: list) -> int:
 
 
 def get_sum_of_all_gear_ratios(input_text: str) -> int:
+    """
+    Adds gear ratios to result.
+    ARGS:
+        input_text: input text
+    RETURN:
+        sum of all gear ratios (int)
+    """
     result = 0
     lines = input_text.splitlines()
     for idx, line in enumerate(lines):

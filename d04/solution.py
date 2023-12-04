@@ -3,6 +3,13 @@ import functools
 
 # Part 1
 def get_intersections(line: str) -> set:
+    """
+    Extracts winning numbers and numbers from line and returns intersection of them
+    ARGS:
+        line: str - line from input
+    RETURNS:
+        set of intersections
+    """
     winning_numbers, numbers = line.split(':')[1].split('|')
     winning_numbers = set([int(x) for x in winning_numbers.split()])
     numbers = set([int(x) for x in numbers.split()])
@@ -10,6 +17,13 @@ def get_intersections(line: str) -> set:
 
 
 def get_cards_total_points(input_text: str) -> int:
+    """
+    Calculates total points for all cards. First point is 1, each match after the first doubles the point value.
+    ARGS:
+        input_text: str - input text
+    RETURNS:
+        int - total points
+    """
     result = 0
     lines = input_text.splitlines()
     for line in lines:
@@ -39,6 +53,15 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
 
 # Part 2
 def get_scratchcards_total(input_text: str) -> int:
+    """
+    Calculates total number of scratchcards. Each card can be copied multiple times.
+    If card has no intersections with winning numbers, it's one point. If card has intersections,
+    it makes copies of each following len(intersection) cards.
+    ARGS:
+        input_text: str - input text
+    RETURNS:
+        int - total number of scratchcards
+    """
     lines = input_text.splitlines()
     lines_len = len(lines)
     copies = [0]*lines_len

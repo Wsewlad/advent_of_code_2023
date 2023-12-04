@@ -2,6 +2,15 @@ import re
 
 
 def calculate_sum_of_all_of_the_calibration_values(input_text: str) -> int:
+    """
+    Splits the input text into lines.
+    For each line, finds all digits and concatenates the first and the last one.
+    Then summs all the values.
+    ARGS:
+        input_text: str
+    RETURNS:
+        result: int
+    """
     result = 0
     lines = input_text.splitlines()
     for line in lines:
@@ -13,8 +22,16 @@ def calculate_sum_of_all_of_the_calibration_values(input_text: str) -> int:
 
 
 def calculate_sum_of_all_of_the_calibration_values_part_2(input_text: str) -> int:
+    """
+    Splits the input text into lines. For each line, iterates over all the characters and finds all the digits.
+    Then concatenates the first and the last digit and sums all the values.
+    ARGS:
+        input_text: str
+    RETURNS:
+        result: int
+    """
     pattern = r'\d|one|two|three|four|five|six|seven|eight|nine'
-    didgit_map = {
+    digit_map = {
         '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
         'one': '1', 'two': '2', 'three': '3', 'four': '4', 'five': '5', 'six': '6', 'seven': '7', 'eight': '8',
         'nine': '9'
@@ -28,7 +45,7 @@ def calculate_sum_of_all_of_the_calibration_values_part_2(input_text: str) -> in
             digits += re.findall(pattern, line[start:])
             start += 1
         if any(digits):
-            calibration_value = didgit_map[digits[0]] + didgit_map[digits[-1]]
+            calibration_value = digit_map[digits[0]] + digit_map[digits[-1]]
             result += int(calibration_value)
     return result
 

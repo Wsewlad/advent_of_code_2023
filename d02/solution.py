@@ -1,6 +1,14 @@
 
 
 def calculate_sum_of_game_ids(input_text: str) -> int:
+    """
+    Splits input text into lines and then into games and sets of cubes. For each game checks if there is a cube
+    with a number higher than the rule. If there is no such cube, adds game id to the result.
+    ARGS:
+        input_text: string with input text
+    RETURNS:
+        sum of game ids (int)
+    """
     result = 0
     lines = input_text.splitlines()
     for line in lines:
@@ -9,8 +17,8 @@ def calculate_sum_of_game_ids(input_text: str) -> int:
         cubes = sets.replace(";", ",").split(",")
         cube_rules = {"red": 12, "green": 13, "blue": 14}
         for rule in cube_rules:
-            cube_numbres = sorted([int(cube.split()[0]) for cube in cubes if rule in cube])
-            if cube_numbres[-1] > cube_rules[rule]:
+            cube_numbers = sorted([int(cube.split()[0]) for cube in cubes if rule in cube])
+            if cube_numbers[-1] > cube_rules[rule]:
                 break
         else:
             result += int(game_id)
@@ -34,6 +42,14 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
 
 
 def calculate_sum_of_power_of_minimum_sets_of_cubes(input_text: str) -> int:
+    """
+    Splits input text into lines and then into games and sets of cubes.
+    For each game calculates the power of the set of cubes with the highest numbers. Then adds it to the result.
+    ARGS:
+        input_text: string with input text
+    RETURNS:
+        sum of powers (int)
+    """
     result = 0
     lines = input_text.splitlines()
     for line in lines:
