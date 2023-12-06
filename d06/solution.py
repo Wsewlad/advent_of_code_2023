@@ -2,6 +2,9 @@ import numpy as np
 
 
 def find_number_of_ways_to_beat_the_record(races: list) -> int:
+    """
+    For each race find the number of ways to beat the record.
+    """
     return np.prod(
         [
             len(
@@ -18,12 +21,18 @@ Distance:  9  40  200
 
 
 def part_1(input_text: str) -> int:
+    """
+    Parses the races and finds the number of ways to beat the record.
+    """
     lines = [map(lambda x: int(x), line.split(":")[1].split()) for line in input_text.splitlines()]
     races = list(zip(*lines))
     return find_number_of_ways_to_beat_the_record(races)
 
 
 def part_2(input_text: str) -> int:
+    """
+    Parses one big race and finds the number of ways to beat the record.
+    """
     race = [int(line.split(":")[1].replace(" ", "")) for line in input_text.splitlines()]
     return find_number_of_ways_to_beat_the_record([(race[0], race[1])])
 
