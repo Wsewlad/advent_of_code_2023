@@ -6,3 +6,4 @@
 ### [Day 2: Cube Conundrum](/d02)
 ### [Day 3: Gear Ratios](/d03)
 ### [Day 4: Scratchcards](/d04)
+### [Day 5: If You Give A Seed A Fertilizer](/d05)
