@@ -1,4 +1,5 @@
 from itertools import chain
+import concurrent.futures
 
 
 def get_mapping(text_input: str) -> tuple:
@@ -32,14 +33,31 @@ def map_value(value: int, ranges: list) -> int:
 
 
 def seed_to_location(seed: int, mapping: dict) -> int:
-    soil = map_value(seed, mapping["seed-to-soil"])
-    fertilizer = map_value(soil, mapping["soil-to-fertilizer"])
-    water = map_value(fertilizer, mapping["fertilizer-to-water"])
-    light = map_value(water, mapping["water-to-light"])
-    temperature = map_value(light, mapping["light-to-temperature"])
-    humidity = map_value(temperature, mapping["temperature-to-humidity"])
-    location = map_value(humidity, mapping["humidity-to-location"])
-    return location
+    # soil = map_value(seed, mapping["seed-to-soil"])
+    # fertilizer = map_value(soil, mapping["soil-to-fertilizer"])
+    # water = map_value(fertilizer, mapping["fertilizer-to-water"])
+    # light = map_value(water, mapping["water-to-light"])
+    # temperature = map_value(light, mapping["light-to-temperature"])
+    # humidity = map_value(temperature, mapping["temperature-to-humidity"])
+    # location = map_value(humidity, mapping["humidity-to-location"])
+    # return location
+    return map_value(
+        map_value(
+            map_value(
+                map_value(
+                    map_value(
+                        map_value(
+                            map_value(
+                                seed,
+                                mapping["seed-to-soil"]
+                            ),
+                            mapping["soil-to-fertilizer"]
+                        ), mapping["fertilizer-to-water"]
+                    ), mapping["water-to-light"]
+                ), mapping["light-to-temperature"]
+            ), mapping["temperature-to-humidity"]
+        ), mapping["humidity-to-location"]
+    )
 
 
 def part1(text_input: str) -> int:
@@ -53,20 +71,32 @@ def part1(text_input: str) -> int:
     return lowest_location
 
 
+def generate_seeds(start, length):
+    for seed in range(start, start + length):
+        yield seed
+
+
+def calculate_location_range(seed_range, mapping):
+    start, length = seed_range
+    return min(
+        (seed_to_location(x, mapping) for x in generate_seeds(start, length))
+    )
+
+
 def part2(text_input: str) -> int:
     seeds = [int(s) for s in text_input.split('seeds:')[1].split('\n')[0].split()]
     mapping = parse_mappings(text_input)
-    seed_to_range = {seed: seeds[idx + 1] for idx, seed in enumerate(seeds) if (idx + 1) % 2 != 0}
-    seeds = [
-        range(initial_seed, initial_seed + length) for initial_seed, length in seed_to_range.items()
-    ]
+    seed_to_range = [(seed, seeds[idx + 1]) for idx, seed in enumerate(seeds) if (idx + 1) % 2 != 0]
     # seeds = [
-    #     (initial_seed + idx for idx, x in enumerate(range(length))) for initial_seed, length in seed_to_range.items()
+    #     range(initial_seed, initial_seed + length) for initial_seed, length in seed_to_range.items()
     # ]
-    seeds = chain.from_iterable(seeds)
-    return min(
-        (seed_to_location(x, mapping) for x in seeds)
-    )
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        results = list(executor.map(lambda x: calculate_location_range(x, mapping), seed_to_range))
+    return min(results)
+    # seeds = chain.from_iterable(seeds)
+    # return min(
+    #     (seed_to_location(x, mapping) for x in seeds)
+    # )
     # return min(
     #     (
     #         min((seed_to_location(x, mapping) for x in s)) for s
@@ -110,8 +140,8 @@ humidity-to-location map:
 56 93 4
 """
 
-result = part1(sample)
-print(result)
+# result = part1(sample)
+# print(result)
 # #
 # with open('input.txt', "r") as file:
 #     text = file.read()
@@ -125,3 +155,4 @@ with open('input.txt', "r") as file:
     text = file.read()
     result = part2(text)
     print(result)
+
