@@ -9,3 +9,5 @@
 ### [Day 5: If You Give A Seed A Fertilizer](/d05)
 ### [Day 6: Wait For It](/d06)
 ### [Day 7: Camel Cards](/d07)
+### [Day 8: Haunted Wasteland](/d08)
+### [Day 9: Mirage Maintenance](/d09)
