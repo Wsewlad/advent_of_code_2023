@@ -2,21 +2,14 @@ import pandas as pd
 
 
 def find_farthest_step_from_start(input_text: str) -> int:
-    # (x, y)
+    # (y, x)
     rules = {
-        # "|": {(0, -1), (0, 1)},
         "|": {(-1, 0), (1, 0)},
-        # "-": {(-1, 0), (1, 0)},
         "-": {(0, -1), (0, 1)},
-        # "L": {(0, -1), (1, 0)},
         "L": {(-1, 0), (0, 1)},
-        # "J": {(-1, 0), (0, -1)},
         "J": {(-1, 0), (0, -1)},
-        # "7": {(-1, 0), (0, 1)},
         "7": {(0, -1), (1, 0)},
-        # "F": {(1, 0), (0, 1)},
         "F": {(0, 1), (1, 0)},
-        # "S": {(1, 0), (0, -1), (-1, 0), (0, 1)},
         "S": {(0, 1), (-1, 0), (0, -1), (1, 0)},
     }
     matrix = [[*line] for line in input_text.splitlines()]
@@ -31,7 +24,6 @@ def find_farthest_step_from_start(input_text: str) -> int:
             break
         visited.add((y, x))
         steps_count += 1
-        # print(matrix[y][x])
         for dy, dx in rules.get(matrix[y][x], set()):
             if 0 <= y + dy < len(matrix) and 0 <= x + dx < len(matrix[0]) and matrix[y + dy][x + dx] != ".":
                 rules_to_check = rules.get(matrix[y + dy][x + dx])
@@ -40,7 +32,7 @@ def find_farthest_step_from_start(input_text: str) -> int:
                     break
     result = int(steps_count / 2)
     print(result)
-    return int(steps_count / 2)
+    return result
 
 
 sample1 = """.....
