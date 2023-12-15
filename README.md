@@ -11,3 +11,5 @@
 ### [Day 7: Camel Cards](/d07)
 ### [Day 8: Haunted Wasteland](/d08)
 ### [Day 9: Mirage Maintenance](/d09)
+### [Day 10: Pipe Maze](/d10)
+### [Day 11: Cosmic Expansion](/d11)
