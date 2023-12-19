@@ -10,6 +10,9 @@ def count_columns_reflections(df: pd.DataFrame, col_index: int) -> int:
         if j >= len(df.columns):
             reflections = col_index + 1
             break
+        # res = df[i] == df[j]
+        # if res.where(res == False).count() == 1:
+        #     df[i] = df[j]
         if not df[i].equals(df[j]):
             reflections = 0
             break
@@ -27,6 +30,9 @@ def count_rows_reflections(df: pd.DataFrame, row_index: int) -> int:
         if j >= len(df.index):
             reflections = (row_index + 1) * 100
             break
+        # res = df.iloc[i] == df.iloc[j]
+        # if res.where(res == False).count() == 1:
+        #     df.iloc[i] = df.iloc[j]
         if not df.iloc[i].equals(df.iloc[j]):
             reflections = 0
             break
@@ -35,19 +41,29 @@ def count_rows_reflections(df: pd.DataFrame, row_index: int) -> int:
 
 
 def find_vertical_reflections(df: pd.DataFrame) -> int:
-    col_indexes = []
+    lines_of_reflection = []
     for col in range(len(df.columns) - 1):
         if df[col].equals(df[col + 1]):
-            col_indexes.append(col)
-    return max([count_columns_reflections(df, col_index) for col_index in col_indexes], default=0)
+            lines_of_reflection.append(col)
+
+        # res = df[col] == df[col + 1]
+        # if res.where(res == False).count() == 1:
+        #     df[col] = df[col + 1]
+        #     lines_of_reflection.append(col)
+    return max([count_columns_reflections(df, v_line) for v_line in lines_of_reflection], default=0)
 
 
 def find_horizontal_reflections(df: pd.DataFrame) -> int:
-    row_indexes = []
+    lines_of_reflection = []
     for row in range(len(df.index) - 1):
         if df.iloc[row].equals(df.iloc[row + 1]):
-            row_indexes.append(row)
-    return max([count_rows_reflections(df, row_index) for row_index in row_indexes], default=0)
+            lines_of_reflection.append(row)
+
+        # res = df.iloc[row] == df.iloc[row + 1]
+        # if res.where(res == False).count() == 1:
+        #     df.iloc[row] = df.iloc[row + 1]
+        #     lines_of_reflection.append(row)
+    return max([count_rows_reflections(df, h_line) for h_line in lines_of_reflection], default=0)
 
 
 def get_sum_of_reflections(input_text: str) -> int:
@@ -79,5 +95,5 @@ sample = """#.##..##.
 """
 
 print(get_sum_of_reflections(sample))
-with open('input.txt', 'r') as f:
-    print(get_sum_of_reflections(f.read()))
+# with open('input.txt', 'r') as f:
+#     print(get_sum_of_reflections(f.read()))
