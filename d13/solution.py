@@ -1,15 +1,8 @@
 import pandas as pd
 
 
-def find_vertical_reflections(df: pd.DataFrame) -> int:
+def count_columns_reflections(df: pd.DataFrame, col_index: int) -> int:
     reflections = 0
-    col_index = -1
-    # Find first column that is equal to the next one
-    for col in range(len(df.columns) - 1):
-        if df[col].equals(df[col + 1]):
-            col_index = col
-            break
-    # Count reflections
     if col_index == -1:
         return reflections
     for i in range(col_index, -1, -1):
@@ -20,17 +13,12 @@ def find_vertical_reflections(df: pd.DataFrame) -> int:
         if not df[i].equals(df[j]):
             reflections = 0
             break
+        reflections += 1
     return reflections
 
 
-def find_horizontal_reflections(df: pd.DataFrame) -> int:
+def count_rows_reflections(df: pd.DataFrame, row_index: int) -> int:
     reflections = 0
-    row_index = -1
-    # Find first row that is equal to the next one
-    for row in range(len(df.index) - 1):
-        if df.iloc[row].equals(df.iloc[row + 1]):
-            row_index = row
-            break
     if row_index == -1:
         return reflections
     # Count reflections
@@ -42,7 +30,24 @@ def find_horizontal_reflections(df: pd.DataFrame) -> int:
         if not df.iloc[i].equals(df.iloc[j]):
             reflections = 0
             break
+        reflections += 100
     return reflections
+
+
+def find_vertical_reflections(df: pd.DataFrame) -> int:
+    col_indexes = []
+    for col in range(len(df.columns) - 1):
+        if df[col].equals(df[col + 1]):
+            col_indexes.append(col)
+    return max([count_columns_reflections(df, col_index) for col_index in col_indexes], default=0)
+
+
+def find_horizontal_reflections(df: pd.DataFrame) -> int:
+    row_indexes = []
+    for row in range(len(df.index) - 1):
+        if df.iloc[row].equals(df.iloc[row + 1]):
+            row_indexes.append(row)
+    return max([count_rows_reflections(df, row_index) for row_index in row_indexes], default=0)
 
 
 def get_sum_of_reflections(input_text: str) -> int:
@@ -53,7 +58,6 @@ def get_sum_of_reflections(input_text: str) -> int:
         df = pd.DataFrame([list(row) for row in pattern.splitlines()])
         reflections += find_vertical_reflections(df)
         reflections += find_horizontal_reflections(df)
-
     return reflections
 
 
