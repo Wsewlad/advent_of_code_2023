@@ -13,3 +13,5 @@
 ### [Day 9: Mirage Maintenance](/d09)
 ### [Day 10: Pipe Maze](/d10)
 ### [Day 11: Cosmic Expansion](/d11)
+
+### [Day 13: Point of Incidence](/d13)
