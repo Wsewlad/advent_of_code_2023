@@ -130,6 +130,44 @@ def find_number_of_energized_tiles(input_text: str) -> int:
     return len(energized)
 
 
+def find_number_of_energized_tiles_starting_from_each_border_point(input_text: str) -> int:
+    """
+    Finds the number of energized tiles starting from each border point
+    ARGS:
+        input_text: input text
+    RETURNS:
+        number of energized tiles
+    """
+    max_len = 0
+    contraption = [[s for s in list(line)] for line in input_text.splitlines()]
+    df = pd.DataFrame(contraption)
+    for i in range(df.shape[1]):
+        energized = set()
+        start = (i, 0)
+        direction = find_direction(df.iloc[start[1], start[0]], 'D')[0]
+        navigate_iteratively(df, start, direction, energized)
+        max_len = max(max_len, len(energized))
+    for i in range(df.shape[1]):
+        energized = set()
+        start = (i, df.shape[0] - 1)
+        direction = find_direction(df.iloc[start[1], start[0]], 'U')[0]
+        navigate_iteratively(df, start, direction, energized)
+        max_len = max(max_len, len(energized))
+    for i in range(df.shape[0]):
+        energized = set()
+        start = (0, i)
+        direction = find_direction(df.iloc[start[1], start[0]], 'R')[0]
+        navigate_iteratively(df, start, direction, energized)
+        max_len = max(max_len, len(energized))
+    for i in range(df.shape[0]):
+        energized = set()
+        start = (df.shape[1] - 1, i)
+        direction = find_direction(df.iloc[start[1], start[0]], 'L')[0]
+        navigate_iteratively(df, start, direction, energized)
+        max_len = max(max_len, len(energized))
+    return max_len
+
+
 sample = r""".|...\....
 |.-.\.....
 .....|-...
@@ -145,3 +183,7 @@ sample = r""".|...\....
 print(find_number_of_energized_tiles(sample))
 with open('input.txt', 'r') as input_file:
     print(find_number_of_energized_tiles(input_file.read()))
+
+print(find_number_of_energized_tiles_starting_from_each_border_point(sample))
+with open('input.txt', 'r') as input_file:
+    print(find_number_of_energized_tiles_starting_from_each_border_point(input_file.read()))
