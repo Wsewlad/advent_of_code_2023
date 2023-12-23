@@ -15,3 +15,5 @@
 ### [Day 11: Cosmic Expansion](/d11)
 
 ### [Day 13: Point of Incidence](/d13)
+### [Day 14: Parabolic Reflector Dish](/d14)
+### [Day 15: Lens Library](/d15)
