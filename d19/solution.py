@@ -1,4 +1,5 @@
 
+
 def apply_rule(message: dict, rule_key: str, rules: dict) -> bool:
     """
     Return True if the message is accepted by the rule, False otherwise.
@@ -35,6 +36,54 @@ def apply_rule(message: dict, rule_key: str, rules: dict) -> bool:
             return apply_rule(message, r, rules)
 
 
+def apply_rule_iterative(message: dict, rule_key: str, rules: dict) -> bool:
+    """
+    Return True if the message is accepted by the rule, False otherwise.
+    ARGS:
+        message: dict, the message to check
+        rule_key: str, the key of the rule to apply
+        rules: dict, the rules to apply
+    Returns:
+        bool, True if the message is accepted by the rule, False otherwise
+    """
+    actions = {
+        'R': lambda x: False,
+        'A': lambda x: True,
+    }
+    rule_stack = [rule_key]
+    while rule_stack:
+        current_rule = rule_stack.pop()
+        rule = rules[current_rule]
+        for r in rule:
+            if '>' in r:
+                field, value_and_action = r.split('>')
+                value, action = value_and_action.split(':')
+                if field in message:
+                    if int(message[field]) > int(value):
+                        if action in actions.keys():
+                            return actions[action](message)
+                        else:
+                            rule_stack.append(action)
+                            break
+            elif '<' in r:
+                field, value_and_action = r.split('<')
+                value, action = value_and_action.split(':')
+                if field in message:
+                    if int(message[field]) < int(value):
+                        if action in actions.keys():
+                            return actions[action](message)
+                        else:
+                            rule_stack.append(action)
+                            break
+            elif r == 'A':
+                return True
+            elif r == 'R':
+                return False
+            else:
+                rule_stack.append(r)
+                break
+
+
 def sum_message(message: dict) -> int:
     """
     Return the sum of the values of the message.
@@ -43,7 +92,7 @@ def sum_message(message: dict) -> int:
     Returns:
         int, the sum of the values of the message
     """
-    return sum([int(v) for v in message.values()])
+    return sum(int(v) for v in message.values())
 
 
 def get_sum_of_accepted_ratings(input_text: str) -> int:
@@ -61,7 +110,23 @@ def get_sum_of_accepted_ratings(input_text: str) -> int:
     }
     messages = [message.replace('{', "").replace('}', "").split(',') for message in messages.split('\n')]
     messages = [dict([m.split('=') for m in message if '=' in m]) for message in messages]
-    return sum([sum_message(message) for message in messages if apply_rule(message, 'in', rules)])
+    return sum(sum_message(message) for message in messages if apply_rule_iterative(message, 'in', rules))
+
+
+def get_sum_of_accepted_ratings_part2(input_text: str) -> int:
+    rules, _ = input_text.split('\n\n')
+    rules = {
+        rule.split('{')[0]: rule.split('{')[1].split('}')[0].strip().split(',')
+        for rule in rules.split('\n')
+    }
+    messages = (
+        {'x': x, 'm': m, 'a': a, 's': s}
+        for x in range(1, 4001)
+        for m in range(1, 4001)
+        for a in range(1, 4001)
+        for s in range(1, 4001)
+    )
+    return sum(sum_message(message) for message in messages if apply_rule(message, 'in', rules))
 
 
 sample = """px{a<2006:qkq,m>2090:A,rfg}
@@ -86,3 +151,7 @@ hdj{m>838:A,pv}
 print(get_sum_of_accepted_ratings(sample))
 with open('input.txt', 'r') as f:
     print(get_sum_of_accepted_ratings(f.read()))
+
+print(get_sum_of_accepted_ratings_part2(sample))
+with open('input.txt', 'r') as f:
+    print(get_sum_of_accepted_ratings_part2(f.read()))
