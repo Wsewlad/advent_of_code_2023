@@ -1,23 +1,4 @@
 import pandas as pd
-import numpy as np
-
-
-# def shift_to_north(df: pd.DataFrame) -> None:
-#     """
-#     Shifts all 'O' to the north.
-#     Args:
-#         df: dataframe
-#     Returns:
-#         None
-#     """
-#     for i in range(1, len(df)):
-#         for j in range(len(df.columns)):
-#             if df.iloc[i, j] == 'O':
-#                 current_row_idx = i
-#                 while current_row_idx > 0 and df.iloc[current_row_idx - 1, j] == '.':
-#                     df.iloc[current_row_idx - 1, j] = 'O'
-#                     df.iloc[current_row_idx, j] = '.'
-#                     current_row_idx -= 1
 
 
 def shift_to_north(df: pd.DataFrame) -> None:
@@ -54,14 +35,6 @@ def shift_to_west(df: pd.DataFrame) -> None:
             if nearest_not_empty_cell + 1 != span[1]:
                 df.iloc[span[0], nearest_not_empty_cell + 1] = 'O'
                 df.iloc[span[0], span[1]] = '.'
-    # for i in range(len(df)):
-    #     for j in range(1, len(df.columns)):
-    #         if df.iloc[i, j] == 'O':
-    #             current_col_idx = j
-    #             while current_col_idx > 0 and df.iloc[i, current_col_idx - 1] == '.':
-    #                 df.iloc[i, current_col_idx - 1] = 'O'
-    #                 df.iloc[i, current_col_idx] = '.'
-    #                 current_col_idx -= 1
 
 
 def shift_to_south(df: pd.DataFrame) -> None:
@@ -81,15 +54,6 @@ def shift_to_south(df: pd.DataFrame) -> None:
                 df.iloc[farthest_not_empty_cell - 1, span[1]] = 'O'
                 df.iloc[span[0], span[1]] = '.'
 
-    # for i in range(len(df) - 2, -1, -1):
-    #     for j in range(len(df.columns)):
-    #         if df.iloc[i, j] == 'O':
-    #             current_row_idx = i
-    #             while current_row_idx < len(df) - 1 and df.iloc[current_row_idx + 1, j] == '.':
-    #                 df.iloc[current_row_idx + 1, j] = 'O'
-    #                 df.iloc[current_row_idx, j] = '.'
-    #                 current_row_idx += 1
-
 
 def shift_to_east(df: pd.DataFrame) -> None:
     """
@@ -107,20 +71,26 @@ def shift_to_east(df: pd.DataFrame) -> None:
             if farthest_not_empty_cell - 1 != span[1]:
                 df.iloc[span[0], farthest_not_empty_cell - 1] = 'O'
                 df.iloc[span[0], span[1]] = '.'
-    # for i in range(len(df)):
-    #     for j in range(len(df.columns) - 2, -1, -1):
-    #         if df.iloc[i, j] == 'O':
-    #             current_col_idx = j
-    #             while current_col_idx < len(df.columns) - 1 and df.iloc[i, current_col_idx + 1] == '.':
-    #                 df.iloc[i, current_col_idx + 1] = 'O'
-    #                 df.iloc[i, current_col_idx] = '.'
-    #                 current_col_idx += 1
 
 
+# 98029
 def find_the_total_load(input_text: str, part2: bool = False) -> int:
     df = pd.DataFrame([list(row) for row in input_text.splitlines()])
     if part2:
-        for _ in range(1000000000):
+        steps = 1000000000
+        seen = dict()
+        for step in range(steps):
+            spans = str(df[df == 'O'].stack().index.tolist())
+            if (prev_step := seen.get(spans)) is not None:
+                next_since_prev = step - prev_step
+                last_step = step
+                break
+            seen[spans] = step
+            shift_to_north(df)
+            shift_to_west(df)
+            shift_to_south(df)
+            shift_to_east(df)
+        for _ in range((steps - last_step) % next_since_prev):
             shift_to_north(df)
             shift_to_west(df)
             shift_to_south(df)
@@ -146,5 +116,5 @@ O.#..O.#.#
 """
 
 print(find_the_total_load(sample, part2=True))
-# with open('input.txt', 'r') as f:
-#     print(find_the_total_load(f.read(), part2=True))
+with open('input.txt', 'r') as f:
+    print(find_the_total_load(f.read(), part2=True))
